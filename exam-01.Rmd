@@ -45,7 +45,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Academic Integrity Statement
 
-*I, \_\_\_\_\_\_\_\_\_\_\_\_, hereby state that I have not communicated with or gained information in any way from my classmates or anyone other than the Professor or TA during this exam, and that all work is my own.*
+*I, Caeden Kullander, hereby state that I have not communicated with or gained information in any way from my classmates or anyone other than the Professor or TA during this exam, and that all work is my own.*
 
 **A note on sharing / reusing code:** I am well aware that a huge volume of code is available on the web to solve any number of problems.
 For this exam you are allowed to make use of any online resources (e.g. StackOverflow) but you must explicitly cite where you obtained any code you directly use (or use as inspiration).
@@ -98,11 +98,42 @@ The main data is in the `flights` data frame, but there are additional data sets
 
 1.  **Question 1 (10 points)** - What are the ten most common destinations for flights from NYC airports in 2013?
     Make a table that lists these in descending order of frequency and shows the number of fligts heading to each airport.
+    
+```{r message=FALSE}
+library(tidyverse)
+library(nycflights13)
+```
+
+```{r eval=FALSE, echo=FALSE}
+view(flights) #this is just so I can look at the dataset.
+```
+
+```{r common-destinations, echo=FALSE}
+flights %>%
+  group_by(dest) %>%
+  count() %>%
+  arrange(desc(n))
+```
+
+**First, I loaded the packages. Next, I had it group flights by destination, then count the frequency of each destination. Then, I told it to arrange by descending number.**
 
 2.  **Question 2 (10 points)** - Which airlines have the most flights departing from NYC airports in 2013?
     Make a table that lists these in descending order of frequency and shows the number of flights for each airline.
     In your narrative mention the names of the airlines as well.
     *Hint:* You can use the `airlines` dataset to look up the airline name based on `carrier` code.
+
+```{r eval=FALSE, echo=FALSE}
+view(airlines) #also just so I can view the dataset
+```
+
+```{r most-departures, echo=FALSE}
+flights %>%
+  group_by(carrier) %>%
+  count() %>%
+  arrange(desc(n))
+```
+
+**I took the same code from question 1, but changed it to group by carrier. After grouping by carrier, it counts the frequency and arranged by descending frequency. The ten most common airlines are, in order, United Airlines, JetBlue Airways, ExpressJet Airlines, Delta Airlines, American Airlines, Envoy Air, US Airways, Endeavor Air, Southwest Airlines, and Virgin America.**
 
 3.  **Question 3 (10 points)** - Consider only flights that have non-missing arrival delay information.
     Your answer should include the name of the carrier in addition to the carrier code and the values asked.
