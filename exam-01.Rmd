@@ -1,7 +1,7 @@
 ---
 title: "Take Home Exam #1"
-author: "Adam J Sullivan"
-date: "February 24, 2024"
+author: "Caeden Kullander"
+date: "February 23, 2025"
 output: html_document
 ---
 
@@ -99,7 +99,7 @@ The main data is in the `flights` data frame, but there are additional data sets
 1.  **Question 1 (10 points)** - What are the ten most common destinations for flights from NYC airports in 2013?
     Make a table that lists these in descending order of frequency and shows the number of fligts heading to each airport.
     
-```{r message=FALSE}
+```{r message=FALSE, echo=FALSE}
 library(tidyverse)
 library(nycflights13)
 ```
@@ -141,11 +141,50 @@ flights %>%
     a\.
     Which carrier had the highest mean arrival delay?
 
+```{r high-mean-arrival, echo=FALSE}
+flights %>%
+  group_by(carrier) %>%
+  summarise(mean = mean(arr_delay, na.rm = TRUE)) %>%
+  arrange(desc(mean))
+```
+
+**I took the flights dataset and grouped it by carrier. Then I used summarise to get the mean arrival delay for each carrier while excluding NA cells. Then I arranged it in descending order. F9, or Frontier Airlines has the highest mean arrival delay.**
+
     b\.
     Which carrier had the lowest mean arrival delay?
 
+```{r low-mean-arrival, echo=FALSE}
+flights %>%
+  group_by(carrier) %>%
+  summarise(mean = mean(arr_delay, na.rm = TRUE)) %>%
+  arrange(mean)
+```
+
+**I used the exact same code as for the first part, except I arranged in the opposite order. The airline with the lowest mean arrival is AS, or Alaska Airlines.**
+
 4.  **Question 4 (10 points)** - What was the mean temperature at the origin airport on the day with the highest departure delay?
     Your answer should include the name of origin airport, the date with the highest departure delay, and the mean temperature on that day.
+
+```{r echo=FALSE, eval=FALSE}
+view(weather) #Again just to see the dataset
+```
+
+**First I find the flight with the highest arrival delay using the same code from question 1. I also use this to see the year, month, day, and origin for this flight.**
+
+```{r highest-delay, echo=FALSE}
+flights %>%
+  group_by(dep_delay, year, month, day, origin) %>%
+  count() %>%
+  arrange(desc(dep_delay))
+```
+
+**Next I filtered for the specific date and origin, then summarised it to show the mean temperature, which is 42.6.**
+
+```{r mean-temp, echo=FALSE}
+weather%>%
+  filter(year == 2013, month == 1, day == 9, origin == "JFK") %>%
+  summarise(mean = mean(temp))
+```
 
 5.  **Question 5 (15 points)** - Consider breaking the day into four time intervals: 12:01am-6am, 6:01am-12pm, 12:01pm-6pm, 6:01pm-12am.
 
