@@ -191,19 +191,84 @@ weather%>%
     a\.
     Calculate the proportion of flights that are delayed at departure at each of these time intervals.
 
+```{r time-interval-one, echo=FALSE}
+flights %>%
+  filter(dep_time >= 1, dep_time <= 600) %>%
+  count(dep_delay > 0)
+
+1553/9344 #this just calculates the proportion.
+```
+
+**I filtered the dataset so that it only included departure times of 1 through 600. Then I counted for when the departure delay was greater than 0. The proportion of delayed flights for this interval is 0.166.**
+
+```{r time-interval-two, echo=FALSE}
+flights %>%
+  filter(dep_time >= 601, dep_time <= 1200) %>%
+  count(dep_delay > 0)
+
+30178/122082 #this just calculates the proportion.
+```
+
+**I used the same code but for a different time period. the proportion of delayed flights for this time period is 0.247.**
+
+```{r time-interval-three, echo=FALSE}
+flights %>%
+  filter(dep_time >= 1201, dep_time <= 1800) %>%
+  count(dep_delay > 0)
+
+53151/120738 #this just calculates the proportion.
+```
+
+**I used the same code again. This time the proportion is 0.44**
+
+```{r time-interval-four, echo=FALSE}
+flights %>%
+  filter(dep_time >= 1801, dep_time <= 2400) %>%
+  count(dep_delay > 0)
+
+43550/76357 #this just calculates the proportion.
+```
+
+**Still the same code. The proportion is 0.57.**
+
     b\.
     Comment on how the likelihood of being delayed change throughout the day?
 
+**The likelihood of being delayed increases substantially the later it is. It is particularly worse in the second half of the day.**
+
 6.  **Question 6 (15 points)** - Find the flight with the longest air time.
 
+```{r longest-flight}
+flights %>%
+  arrange(desc(air_time)) %>%
+  slice(1)
+```
+   
+   **I arranged the flights dataset by descending air time, then sliced it to only include the top result.**
+   
     a\.
     How long is this flight?
+
+**The flight is 695 minutes, or just over 11.5 hours.**
 
     b\.
     What city did it fly to?
 
+**It flew to Honolulu.**
+
     c\.
     How many seats does the plane that flew this flight have?
+    
+```{r echo=FALSE, eval=FALSE}
+view(planes) 
+```
+
+```{r tailnum, echo=FALSE}
+planes %>%
+  filter(tailnum == "N77066")
+```
+
+**I filtered for the plane with the same tail number. There are 292 seats on this plane.**
 
 7.  **Question 7 (15 pts)** - The `airports` data frame contains information on a large number of primarily American airports.
     These data include location information for these airports in the form of latitude and longitude coordinates.
