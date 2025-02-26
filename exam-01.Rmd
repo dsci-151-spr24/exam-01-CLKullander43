@@ -279,10 +279,48 @@ planes %>%
     [This Wikipedia article](https://en.wikipedia.org/wiki/List_of_extreme_points_of_the_United_States) can help, but you're welcomed to use other resources as well.
     Make sure to cite whatever resource you use.
 
+```{r contiguous-US, echo=FALSE}
+contiguous_us <- airports %>%
+  filter(tzone == "America/Chicago" | tzone == "America/Denver" | tzone == "America/Los_Angeles" | tzone == "America/New_York" | tzone == "America/Phoenix")
+```
+
+```{r longitude, echo=FALSE, message=FALSE}
+ggplot(data = contiguous_us,
+ mapping = aes(x = lon)) +
+ geom_histogram() +
+  labs(title = "Longitude distribution", x = "Longitude")
+```
+
+**First I created a dataset called "contiguous_us". This was filtered to only include rows where the time zone was part of the contiguous US. Then I created a histogram with the mapping set to longitude.**
+
+**There are quite a few airports at around -125. The range of -120 through -100 has a consistent low count of airports. Once the longitude is above -100 the amount of airports begins to increase, spiking particularly high at the -75 through -80 range. After that, it decreases.**
+
 8.  **Question 8 (15 pts)** - Recreate the plot included below using the `flights` data.
     Once you have created the visualization, in no more than one paragraph, describe what you think the point of this visualization might be.
     *Hint:* The visualization uses the variable `arrival`, which is not included in the `flights` data frame.
     You will have to create `arrival` yourself, it is a categorical variable that is equal to `"ontime"` when `arr_delay <= 0` and `"delayed"` when `arr_delay > 0`.
+
+```{r arrival, echo=FALSE}
+flights <- flights %>%
+mutate(arrival = if_else(arr_delay <= 0, "ontime", "delayed"))
+```
+
+```{r filter, message=FALSE}
+flights <- flights %>%
+  filter(dest == "PHL" | dest == "RDU", month == 12)
+```
+
+```{r visualization, message=FALSE, echo=FALSE}
+ggplot(data = flights,
+ mapping = aes(y = dep_delay, x = arrival, color = dest)) +
+ geom_boxplot() +
+  facet_grid(dest~origin) +
+  labs(title = "On time performance of NYC flights", subtitle = "December 2013", y = "Departure delay")
+```
+
+**I used mutate to create a new column where if the arrival delay was <= 0, it was ontime, and delayed if it was > 0. Then I filtered the "flights" dataset to only include data where the month = 12 and the destination = "PHL" or "RDU". Finally, I created a boxplot with a faceted by destination and origin.**
+
+**This is a graph displaying the relationship between departure delay and whether the flight arrived on time or not for the month of December in 2013. Specifically, it only includes flights departing from EWR, JFK, and LGA airports, and landing in either PHL or RDU airports.**
 
 ![](img/plot-to-recreate.png)
 
