@@ -104,36 +104,28 @@ library(tidyverse)
 library(nycflights13)
 ```
 
-```{r eval=FALSE, echo=FALSE}
-view(flights) #this is just so I can look at the dataset.
-```
-
-```{r common-destinations, echo=FALSE}
+```{r common-destinations}
 flights %>%
   group_by(dest) %>%
   count() %>%
   arrange(desc(n))
 ```
 
-**First, I loaded the packages. Next, I had it group flights by destination, then count the frequency of each destination. Then, I told it to arrange by descending number.**
+**First, I loaded the packages. Next, I grouped the "flights" dataset by destination and counted the frequency of each destination. Then, I arranged it by descending number.**
 
 2.  **Question 2 (10 points)** - Which airlines have the most flights departing from NYC airports in 2013?
     Make a table that lists these in descending order of frequency and shows the number of flights for each airline.
     In your narrative mention the names of the airlines as well.
     *Hint:* You can use the `airlines` dataset to look up the airline name based on `carrier` code.
 
-```{r eval=FALSE, echo=FALSE}
-view(airlines) #also just so I can view the dataset
-```
-
-```{r most-departures, echo=FALSE}
+```{r most-departures}
 flights %>%
   group_by(carrier) %>%
   count() %>%
   arrange(desc(n))
 ```
 
-**I took the same code from question 1, but changed it to group by carrier. After grouping by carrier, it counts the frequency and arranged by descending frequency. The ten most common airlines are, in order, United Airlines, JetBlue Airways, ExpressJet Airlines, Delta Airlines, American Airlines, Envoy Air, US Airways, Endeavor Air, Southwest Airlines, and Virgin America.**
+**I took the same code from question 1, but changed it to group by carrier. After grouping by carrier, it counts the frequency and arranges by descending frequency. The ten most common airlines are, in order, United Airlines, JetBlue Airways, ExpressJet Airlines, Delta Airlines, American Airlines, Envoy Air, US Airways, Endeavor Air, Southwest Airlines, and Virgin America.**
 
 3.  **Question 3 (10 points)** - Consider only flights that have non-missing arrival delay information.
     Your answer should include the name of the carrier in addition to the carrier code and the values asked.
@@ -141,14 +133,14 @@ flights %>%
     a\.
     Which carrier had the highest mean arrival delay?
 
-```{r high-mean-arrival, echo=FALSE}
+```{r high-mean-arrival}
 flights %>%
   group_by(carrier) %>%
   summarise(mean = mean(arr_delay, na.rm = TRUE)) %>%
   arrange(desc(mean))
 ```
 
-**I took the flights dataset and grouped it by carrier. Then I used summarise to get the mean arrival delay for each carrier while excluding NA cells. Then I arranged it in descending order. F9, or Frontier Airlines has the highest mean arrival delay.**
+**I took the flights dataset and grouped it by carrier. Then I used summarise to get the mean arrival delay for each carrier while excluding NA cells. Finally, I arranged it in descending order. F9, or Frontier Airlines has the highest mean arrival delay.**
 
     b\.
     Which carrier had the lowest mean arrival delay?
@@ -165,33 +157,30 @@ flights %>%
 4.  **Question 4 (10 points)** - What was the mean temperature at the origin airport on the day with the highest departure delay?
     Your answer should include the name of origin airport, the date with the highest departure delay, and the mean temperature on that day.
 
-```{r echo=FALSE, eval=FALSE}
-view(weather) #Again just to see the dataset
-```
 
-**First I find the flight with the highest arrival delay using the same code from question 1. I also use this to see the year, month, day, and origin for this flight.**
 
-```{r highest-delay, echo=FALSE}
+```{r highest-delay}
 flights %>%
   group_by(dep_delay, year, month, day, origin) %>%
   count() %>%
   arrange(desc(dep_delay))
 ```
+**First I found the flight with the highest arrival delay using the same code from question 1. I also use this to see the year, month, day, and origin for this flight.**
 
-**Next I filtered for the specific date and origin, then summarised it to show the mean temperature, which is 42.6.**
-
-```{r mean-temp, echo=FALSE}
+```{r mean-temp}
 weather%>%
   filter(year == 2013, month == 1, day == 9, origin == "JFK") %>%
   summarise(mean = mean(temp))
 ```
+
+**Next I filtered for the specific date and origin, then summarised it to show the mean temperature, which is roughly 42.7.**
 
 5.  **Question 5 (15 points)** - Consider breaking the day into four time intervals: 12:01am-6am, 6:01am-12pm, 12:01pm-6pm, 6:01pm-12am.
 
     a\.
     Calculate the proportion of flights that are delayed at departure at each of these time intervals.
 
-```{r time-interval-one, echo=FALSE}
+```{r time-interval-one}
 flights %>%
   filter(dep_time >= 1, dep_time <= 600) %>%
   count(dep_delay > 0)
@@ -209,7 +198,7 @@ flights %>%
 30178/122082 #this just calculates the proportion.
 ```
 
-**I used the same code but for a different time period. the proportion of delayed flights for this time period is 0.247.**
+**I used the same code but changed it to include only the second quarter of the day. the proportion of delayed flights for this time period is 0.247.**
 
 ```{r time-interval-three, echo=FALSE}
 flights %>%
@@ -219,7 +208,7 @@ flights %>%
 53151/120738 #this just calculates the proportion.
 ```
 
-**I used the same code again. This time the proportion is 0.44**
+**I used the same code again for the third quarter. This time the proportion is 0.44**
 
 ```{r time-interval-four, echo=FALSE}
 flights %>%
@@ -229,12 +218,12 @@ flights %>%
 43550/76357 #this just calculates the proportion.
 ```
 
-**Still the same code. The proportion is 0.57.**
+**Still the same code for the last quarter. The proportion is 0.57.**
 
     b\.
     Comment on how the likelihood of being delayed change throughout the day?
 
-**The likelihood of being delayed increases substantially the later it is. It is particularly worse in the second half of the day.**
+**The likelihood of being delayed increases substantially the later it is. It is particularly bad in the second half of the day.**
 
 6.  **Question 6 (15 points)** - Find the flight with the longest air time.
 
@@ -258,12 +247,8 @@ flights %>%
 
     c\.
     How many seats does the plane that flew this flight have?
-    
-```{r echo=FALSE, eval=FALSE}
-view(planes) 
-```
 
-```{r tailnum, echo=FALSE}
+```{r tailnum}
 planes %>%
   filter(tailnum == "N77066")
 ```
